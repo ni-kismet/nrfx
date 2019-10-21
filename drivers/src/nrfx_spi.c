@@ -1,32 +1,41 @@
 /**
  * Copyright (c) 2015 - 2018, Nordic Semiconductor ASA
+ * 
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
  * 
  * 1. Redistributions of source code must retain the above copyright notice, this
  *    list of conditions and the following disclaimer.
  * 
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ * 2. Redistributions in binary form, except as embedded into a Nordic
+ *    Semiconductor ASA integrated circuit in a product or a software update for
+ *    such product, must reproduce the above copyright notice, this list of
+ *    conditions and the following disclaimer in the documentation and/or other
+ *    materials provided with the distribution.
  * 
- * 3. Neither the name of the copyright holder nor the names of its
+ * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
  * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * 4. This software, with or without modification, must only be used with a
+ *    Nordic Semiconductor ASA integrated circuit.
+ * 
+ * 5. Any software provided in binary form under this license must not be reverse
+ *    engineered, decompiled, modified and/or disassembled.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
  */
 
 #include <nrfx.h>
@@ -125,18 +134,22 @@ nrfx_err_t nrfx_spi_init(nrfx_spi_t const * const  p_instance,
     {
         nrf_gpio_pin_set(p_config->sck_pin);
     }
+    #if NRFX_CHECK(NRFX_SPI_AUTO_CONFIG_GPIO)
     nrf_gpio_cfg(p_config->sck_pin,
                  NRF_GPIO_PIN_DIR_OUTPUT,
                  NRF_GPIO_PIN_INPUT_CONNECT,
                  NRF_GPIO_PIN_NOPULL,
                  NRF_GPIO_PIN_S0S1,
                  NRF_GPIO_PIN_NOSENSE);
+    #endif
     // - MOSI (optional) - output with initial value 0,
     if (p_config->mosi_pin != NRFX_SPI_PIN_NOT_USED)
     {
         mosi_pin = p_config->mosi_pin;
         nrf_gpio_pin_clear(mosi_pin);
+        #if NRFX_CHECK(NRFX_SPI_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_output(mosi_pin);
+        #endif
     }
     else
     {
@@ -146,7 +159,9 @@ nrfx_err_t nrfx_spi_init(nrfx_spi_t const * const  p_instance,
     if (p_config->miso_pin != NRFX_SPI_PIN_NOT_USED)
     {
         miso_pin = p_config->miso_pin;
+        #if NRFX_CHECK(NRFX_SPI_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_input(miso_pin, (nrf_gpio_pin_pull_t)NRFX_SPI_MISO_PULL_CFG);
+        #endif
     }
     else
     {
@@ -157,7 +172,9 @@ nrfx_err_t nrfx_spi_init(nrfx_spi_t const * const  p_instance,
     if (p_config->ss_pin != NRFX_SPI_PIN_NOT_USED)
     {
         nrf_gpio_pin_set(p_config->ss_pin);
+        #if NRFX_CHECK(NRFX_SPI_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_output(p_config->ss_pin);
+        #endif
     }
     m_cb[p_instance->drv_inst_idx].ss_pin = p_config->ss_pin;
 
@@ -208,7 +225,9 @@ void nrfx_spi_uninit(nrfx_spi_t const * const p_instance)
 
     if (p_cb->miso_pin != NRFX_SPI_PIN_NOT_USED)
     {
+        #if NRFX_CHECK(NRFX_SPI_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_default(p_cb->miso_pin);
+        #endif
     }
     nrf_spi_disable(p_spi);
 
