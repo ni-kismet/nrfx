@@ -602,6 +602,7 @@ void nrfx_spim_abort(nrfx_spim_t const * p_instance)
     NRFX_ASSERT(p_cb->state != NRFX_DRV_STATE_UNINITIALIZED);
 
     nrf_spim_task_trigger(p_instance->p_reg, NRF_SPIM_TASK_STOP);
+    /* Don't wait on stop event while it is not in transfer state. */
     while (p_cb->transfer_in_progress && !nrf_spim_event_check(p_instance->p_reg, NRF_SPIM_EVENT_STOPPED))
     {}
     p_cb->transfer_in_progress = false;
