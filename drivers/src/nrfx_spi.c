@@ -125,18 +125,22 @@ nrfx_err_t nrfx_spi_init(nrfx_spi_t const * const  p_instance,
     {
         nrf_gpio_pin_set(p_config->sck_pin);
     }
+    #if NRFX_CHECK(NRFX_SPI_AUTO_CONFIG_GPIO)
     nrf_gpio_cfg(p_config->sck_pin,
                  NRF_GPIO_PIN_DIR_OUTPUT,
                  NRF_GPIO_PIN_INPUT_CONNECT,
                  NRF_GPIO_PIN_NOPULL,
                  NRF_GPIO_PIN_S0S1,
                  NRF_GPIO_PIN_NOSENSE);
+    #endif
     // - MOSI (optional) - output with initial value 0,
     if (p_config->mosi_pin != NRFX_SPI_PIN_NOT_USED)
     {
         mosi_pin = p_config->mosi_pin;
         nrf_gpio_pin_clear(mosi_pin);
+        #if NRFX_CHECK(NRFX_SPI_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_output(mosi_pin);
+        #endif
     }
     else
     {
@@ -146,7 +150,9 @@ nrfx_err_t nrfx_spi_init(nrfx_spi_t const * const  p_instance,
     if (p_config->miso_pin != NRFX_SPI_PIN_NOT_USED)
     {
         miso_pin = p_config->miso_pin;
+        #if NRFX_CHECK(NRFX_SPI_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_input(miso_pin, (nrf_gpio_pin_pull_t)NRFX_SPI_MISO_PULL_CFG);
+        #endif
     }
     else
     {
@@ -157,7 +163,9 @@ nrfx_err_t nrfx_spi_init(nrfx_spi_t const * const  p_instance,
     if (p_config->ss_pin != NRFX_SPI_PIN_NOT_USED)
     {
         nrf_gpio_pin_set(p_config->ss_pin);
+        #if NRFX_CHECK(NRFX_SPI_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_output(p_config->ss_pin);
+        #endif
     }
     m_cb[p_instance->drv_inst_idx].ss_pin = p_config->ss_pin;
 
@@ -208,7 +216,9 @@ void nrfx_spi_uninit(nrfx_spi_t const * const p_instance)
 
     if (p_cb->miso_pin != NRFX_SPI_PIN_NOT_USED)
     {
+        #if NRFX_CHECK(NRFX_SPI_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_default(p_cb->miso_pin);
+        #endif
     }
     nrf_spi_disable(p_spi);
 

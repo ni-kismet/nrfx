@@ -333,7 +333,9 @@ nrfx_err_t nrfx_gpiote_out_init(nrfx_gpiote_pin_t                pin,
                 nrf_gpio_pin_clear(pin);
             }
 
+            #if NRFX_CHECK(NRFX_GPIOTE_AUTO_CONFIG_GPIO)
             nrf_gpio_cfg_output(pin);
+            #endif
             pin_configured_set(pin);
         }
     }
@@ -357,7 +359,9 @@ void nrfx_gpiote_out_uninit(nrfx_gpiote_pin_t pin)
 
     if (pin_configured_check(pin))
     {
+        #if NRFX_CHECK(NRFX_GPIOTE_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_default(pin);
+        #endif
         pin_configured_clear(pin);
     }
 }
@@ -525,7 +529,9 @@ nrfx_err_t nrfx_gpiote_in_init(nrfx_gpiote_pin_t               pin,
                 }
                 else
                 {
+                    #if NRFX_CHECK(NRFX_GPIOTE_AUTO_CONFIG_GPIO)
                     nrf_gpio_cfg_input(pin, p_config->pull);
+                    #endif
                 }
                 pin_configured_set(pin);
             }
@@ -623,7 +629,9 @@ void nrfx_gpiote_in_uninit(nrfx_gpiote_pin_t pin)
     }
     if (pin_configured_check(pin))
     {
+        #if NRFX_CHECK(NRFX_GPIOTE_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_default(pin);
+        #endif
         pin_configured_clear(pin);
     }
     channel_free((uint8_t)channel_port_get(pin));

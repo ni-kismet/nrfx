@@ -234,18 +234,22 @@ nrfx_err_t nrfx_spim_init(nrfx_spim_t  const * const p_instance,
     {
         nrf_gpio_pin_set(p_config->sck_pin);
     }
+    #if NRFX_CHECK(NRFX_SPIM_AUTO_CONFIG_GPIO)
     nrf_gpio_cfg(p_config->sck_pin,
                  NRF_GPIO_PIN_DIR_OUTPUT,
                  NRF_GPIO_PIN_INPUT_CONNECT,
                  NRF_GPIO_PIN_NOPULL,
                  NRF_GPIO_PIN_S0S1,
                  NRF_GPIO_PIN_NOSENSE);
+    #endif
     // - MOSI (optional) - output with initial value 0,
     if (p_config->mosi_pin != NRFX_SPIM_PIN_NOT_USED)
     {
         mosi_pin = p_config->mosi_pin;
         nrf_gpio_pin_clear(mosi_pin);
+        #if NRFX_CHECK(NRFX_SPIM_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_output(mosi_pin);
+        #endif
     }
     else
     {
@@ -255,7 +259,9 @@ nrfx_err_t nrfx_spim_init(nrfx_spim_t  const * const p_instance,
     if (p_config->miso_pin != NRFX_SPIM_PIN_NOT_USED)
     {
         miso_pin = p_config->miso_pin;
+        #if NRFX_CHECK(NRFX_SPIM_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_input(miso_pin, (nrf_gpio_pin_pull_t)NRFX_SPIM_MISO_PULL_CFG);
+        #endif
     }
     else
     {
@@ -273,7 +279,9 @@ nrfx_err_t nrfx_spim_init(nrfx_spim_t  const * const p_instance,
         {
             nrf_gpio_pin_set(p_config->ss_pin);
         }
+        #if NRFX_CHECK(NRFX_SPIM_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_output(p_config->ss_pin);
+        #endif
 #if NRFX_CHECK(NRFX_SPIM_EXTENDED_ENABLED)
         if (p_config->use_hw_ss)
         {
@@ -294,7 +302,9 @@ nrfx_err_t nrfx_spim_init(nrfx_spim_t  const * const p_instance,
     if (p_config->dcx_pin != NRFX_SPIM_PIN_NOT_USED)
     {
         nrf_gpio_pin_set(p_config->dcx_pin);
+        #if NRFX_CHECK(NRFX_SPIM_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_output(p_config->dcx_pin);
+        #endif
         nrf_spim_dcx_pin_set(p_spim, p_config->dcx_pin);
     }
 
@@ -357,7 +367,9 @@ void nrfx_spim_uninit(nrfx_spim_t const * const p_instance)
 
     if (p_cb->miso_pin != NRFX_SPIM_PIN_NOT_USED)
     {
+        #if NRFX_CHECK(NRFX_SPIM_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg_default(p_cb->miso_pin);
+        #endif
     }
     nrf_spim_disable(p_spim);
 
@@ -590,7 +602,8 @@ void nrfx_spim_abort(nrfx_spim_t const * p_instance)
     NRFX_ASSERT(p_cb->state != NRFX_DRV_STATE_UNINITIALIZED);
 
     nrf_spim_task_trigger(p_instance->p_reg, NRF_SPIM_TASK_STOP);
-    while (!nrf_spim_event_check(p_instance->p_reg, NRF_SPIM_EVENT_STOPPED))
+    /* Don't wait on stop event while it is not in transfer state. */
+    while (p_cb->transfer_in_progress && !nrf_spim_event_check(p_instance->p_reg, NRF_SPIM_EVENT_STOPPED))
     {}
     p_cb->transfer_in_progress = false;
 }

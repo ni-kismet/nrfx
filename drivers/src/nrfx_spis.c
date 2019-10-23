@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013 - 2018, Nordic Semiconductor ASA
+ * Copyright (c) 2015 - 2018, Nordic Semiconductor ASA
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -172,12 +172,14 @@ nrfx_err_t nrfx_spis_init(nrfx_spis_t  const * const p_instance,
 
     if (p_config->miso_pin != NRFX_SPIS_PIN_NOT_USED)
     {
+        #if NRFX_CHECK(NRFX_SPIS_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg(p_config->miso_pin,
                      NRF_GPIO_PIN_DIR_INPUT,
                      NRF_GPIO_PIN_INPUT_CONNECT,
                      NRF_GPIO_PIN_NOPULL,
                      p_config->miso_drive,
                      NRF_GPIO_PIN_NOSENSE);
+        #endif
         miso_pin = p_config->miso_pin;
     }
     else
@@ -187,19 +189,21 @@ nrfx_err_t nrfx_spis_init(nrfx_spis_t  const * const p_instance,
 
     if (p_config->mosi_pin != NRFX_SPIS_PIN_NOT_USED)
     {
+        #if NRFX_CHECK(NRFX_SPIS_AUTO_CONFIG_GPIO)
         nrf_gpio_cfg(p_config->mosi_pin,
                      NRF_GPIO_PIN_DIR_INPUT,
                      NRF_GPIO_PIN_INPUT_CONNECT,
                      NRF_GPIO_PIN_NOPULL,
                      NRF_GPIO_PIN_S0S1,
                      NRF_GPIO_PIN_NOSENSE);
+        #endif
         mosi_pin = p_config->mosi_pin;
     }
     else
     {
         mosi_pin = NRF_SPIS_PIN_NOT_CONNECTED;
     }
-
+    #if NRFX_CHECK(NRFX_SPIS_AUTO_CONFIG_GPIO)
     nrf_gpio_cfg(p_config->csn_pin,
                  NRF_GPIO_PIN_DIR_INPUT,
                  NRF_GPIO_PIN_INPUT_CONNECT,
@@ -213,6 +217,7 @@ nrfx_err_t nrfx_spis_init(nrfx_spis_t  const * const p_instance,
                  NRF_GPIO_PIN_NOPULL,
                  NRF_GPIO_PIN_S0S1,
                  NRF_GPIO_PIN_NOSENSE);
+    #endif
 
     nrf_spis_pins_set(p_spis, p_config->sck_pin, mosi_pin, miso_pin, p_config->csn_pin);
 

@@ -88,9 +88,12 @@ static void configure_pins(nrfx_pwm_t const * const p_instance,
         uint8_t output_pin = p_config->output_pins[i];
         if (output_pin != NRFX_PWM_PIN_NOT_USED)
         {
+#if NRFX_CHECK(NRFX_PWM_AUTO_CONFIG_GPIO)
             bool inverted = output_pin &  NRFX_PWM_PIN_INVERTED;
+#endif
             out_pins[i]   = output_pin & ~NRFX_PWM_PIN_INVERTED;
 
+#if NRFX_CHECK(NRFX_PWM_AUTO_CONFIG_GPIO)
             if (inverted)
             {
                 nrf_gpio_pin_set(out_pins[i]);
@@ -101,6 +104,7 @@ static void configure_pins(nrfx_pwm_t const * const p_instance,
             }
 
             nrf_gpio_cfg_output(out_pins[i]);
+#endif
         }
         else
         {

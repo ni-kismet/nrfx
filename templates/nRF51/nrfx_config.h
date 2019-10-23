@@ -174,6 +174,13 @@
 #define NRFX_GPIOTE_CONFIG_IRQ_PRIORITY 3
 #endif
 
+// <q> NRFX_GPIOTE_AUTO_CONFIG_GPIO - Automatically configures GPIO lines
+
+
+#ifndef NRFX_GPIOTE_AUTO_CONFIG_GPIO
+#define NRFX_GPIOTE_AUTO_CONFIG_GPIO 1
+#endif
+
 // <e> NRFX_GPIOTE_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef NRFX_GPIOTE_CONFIG_LOG_ENABLED
@@ -865,6 +872,13 @@
 
 #ifndef NRFX_SPIS_DEFAULT_CONFIG_IRQ_PRIORITY
 #define NRFX_SPIS_DEFAULT_CONFIG_IRQ_PRIORITY 3
+#endif
+
+// <q> NRFX_SPIS_AUTO_CONFIG_GPIO - Automatically configures GPIO lines
+
+
+#ifndef NRFX_SPIS_AUTO_CONFIG_GPIO
+#define NRFX_SPIS_AUTO_CONFIG_GPIO 1
 #endif
 
 // <o> NRFX_SPIS_DEFAULT_DEF - SPIS default DEF character  <0-255>

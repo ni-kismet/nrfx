@@ -188,8 +188,10 @@ nrfx_err_t nrfx_twim_init(nrfx_twim_t const *        p_instance,
        master when the system is in OFF mode, and when the TWI master is
        disabled, these pins must be configured in the GPIO peripheral.
     */
+#if NRFX_CHECK(NRFX_TWIM_AUTO_CONFIG_GPIO)
     TWIM_PIN_INIT(p_config->scl);
     TWIM_PIN_INIT(p_config->sda);
+#endif
 
     NRF_TWIM_Type * p_twim = p_instance->p_twim;
     nrf_twim_pins_set(p_twim, p_config->scl, p_config->sda);
@@ -225,11 +227,13 @@ void nrfx_twim_uninit(nrfx_twim_t const * p_instance)
     nrfx_prs_release(p_instance->p_twim);
 #endif
 
+#if NRFX_CHECK(NRFX_TWIM_AUTO_CONFIG_GPIO)
     if (!p_cb->hold_bus_uninit)
     {
         nrf_gpio_cfg_default(p_instance->p_twim->PSEL.SCL);
         nrf_gpio_cfg_default(p_instance->p_twim->PSEL.SDA);
     }
+#endif
 
     p_cb->state = NRFX_DRV_STATE_UNINITIALIZED;
     NRFX_LOG_INFO("Instance uninitialized: %d.", p_instance->drv_inst_idx);

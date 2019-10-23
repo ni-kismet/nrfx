@@ -252,6 +252,13 @@
 #define NRFX_GPIOTE_CONFIG_IRQ_PRIORITY 7
 #endif
 
+// <q> NRFX_GPIOTE_AUTO_CONFIG_GPIO - Automatically configures GPIO lines
+
+
+#ifndef NRFX_GPIOTE_AUTO_CONFIG_GPIO
+#define NRFX_GPIOTE_AUTO_CONFIG_GPIO 1
+#endif
+
 // <e> NRFX_GPIOTE_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef NRFX_GPIOTE_CONFIG_LOG_ENABLED
@@ -1236,6 +1243,13 @@
 #define NRFX_SPIM_DEFAULT_CONFIG_IRQ_PRIORITY 7
 #endif
 
+// <q> NRFX_SPIM_AUTO_CONFIG_GPIO - Automatically configures GPIO lines
+
+
+#ifndef NRFX_SPIM_AUTO_CONFIG_GPIO
+#define NRFX_SPIM_AUTO_CONFIG_GPIO 1
+#endif
+
 // <e> NRFX_SPIM_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef NRFX_SPIM_CONFIG_LOG_ENABLED
@@ -1314,6 +1328,13 @@
 
 #ifndef NRFX_SPIS_DEFAULT_CONFIG_IRQ_PRIORITY
 #define NRFX_SPIS_DEFAULT_CONFIG_IRQ_PRIORITY 7
+#endif
+
+// <q> NRFX_SPIS_AUTO_CONFIG_GPIO - Automatically configures GPIO lines
+
+
+#ifndef NRFX_SPIS_AUTO_CONFIG_GPIO
+#define NRFX_SPIS_AUTO_CONFIG_GPIO 1
 #endif
 
 // <o> NRFX_SPIS_DEFAULT_DEF - SPIS default DEF character  <0-255>
@@ -1650,7 +1671,14 @@
 #define NRFX_TWIM_DEFAULT_CONFIG_FREQUENCY 26738688
 #endif
 
-// <q> NRFX_TWIM_DEFAULT_CONFIG_HOLD_BUS_UNINIT  - Enables bus holding after uninit
+// <q> NRFX_TWIM_AUTO_CONFIG_GPIO - Automatically configures GPIO lines
+
+
+#ifndef NRFX_TWIM_AUTO_CONFIG_GPIO
+#define NRFX_TWIM_AUTO_CONFIG_GPIO 1
+#endif
+
+// <q> NRFX_TWIM_DEFAULT_CONFIG_HOLD_BUS_UNINIT  - Enables bus holding after uninit if autoconfig is enabled
 
 
 #ifndef NRFX_TWIM_DEFAULT_CONFIG_HOLD_BUS_UNINIT
