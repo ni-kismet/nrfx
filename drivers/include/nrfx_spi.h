@@ -107,10 +107,10 @@ typedef struct
     nrf_spi_mode_t      mode;       ///< SPI mode.
     nrf_spi_bit_order_t bit_order;  ///< SPI bit order.
     nrf_gpio_pin_pull_t miso_pull;  ///< MISO pull up configuration.
-    bool               skip_gpio_cfg; ///< Skip the GPIO configuration
-                                      /**< When this flag is set, the user is responsible for
-                                       *   providing the proper configuration of the output pins,
-                                       *   as the driver does not touch it at all. */
+    bool                skip_gpio_cfg; ///< Skip the GPIO configuration
+                                       /**< When this flag is set, the user is responsible for
+                                        *   providing the proper configuration of the output pins,
+                                        *   as the driver does not touch it at all. */
 } nrfx_spi_config_t;
 
 /**
