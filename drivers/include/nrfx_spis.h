@@ -154,8 +154,8 @@ typedef struct
     uint8_t              irq_priority;  //!< Interrupt priority.
     bool                 skip_gpio_cfg; ///< Skip the GPIO configuration
                                         /**< When this flag is set, the user is responsible for
-                                        *   providing the proper configuration of the output pins,
-                                        *   as the driver does not touch it at all. */
+                                         *   providing the proper configuration of the output pins,
+                                         *   as the driver does not touch it at all. */
 } nrfx_spis_config_t;
 
 
