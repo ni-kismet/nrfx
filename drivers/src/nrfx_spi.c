@@ -117,49 +117,52 @@ nrfx_err_t nrfx_spi_init(nrfx_spi_t const *        p_instance,
     //   0 - for modes 0 and 1 (CPOL = 0), 1 - for modes 2 and 3 (CPOL = 1);
     //   according to the reference manual guidelines this pin and its input
     //   buffer must always be connected for the SPI to work.
-    if (p_config->mode <= NRF_SPI_MODE_1)
+    if (!p_config->skip_gpio_cfg)
     {
-        nrf_gpio_pin_clear(p_config->sck_pin);
+        if (p_config->mode <= NRF_SPI_MODE_1)
+        {
+            nrf_gpio_pin_clear(p_config->sck_pin);
+        }
+        else
+        {
+            nrf_gpio_pin_set(p_config->sck_pin);
+        }
+        nrf_gpio_cfg(p_config->sck_pin,
+                     NRF_GPIO_PIN_DIR_OUTPUT,
+                     NRF_GPIO_PIN_INPUT_CONNECT,
+                     NRF_GPIO_PIN_NOPULL,
+                     NRF_GPIO_PIN_S0S1,
+                     NRF_GPIO_PIN_NOSENSE);
+        // - MOSI (optional) - output with initial value 0,
+        if (p_config->mosi_pin != NRFX_SPI_PIN_NOT_USED)
+        {
+            mosi_pin = p_config->mosi_pin;
+            nrf_gpio_pin_clear(mosi_pin);
+            nrf_gpio_cfg_output(mosi_pin);
+        }
+        else
+        {
+            mosi_pin = NRF_SPI_PIN_NOT_CONNECTED;
+        }
+        // - MISO (optional) - input,
+        if (p_config->miso_pin != NRFX_SPI_PIN_NOT_USED)
+        {
+            miso_pin = p_config->miso_pin;
+            nrf_gpio_cfg_input(miso_pin, p_config->miso_pull);
+        }
+        else
+        {
+            miso_pin = NRF_SPI_PIN_NOT_CONNECTED;
+        }
+        m_cb[p_instance->drv_inst_idx].miso_pin = p_config->miso_pin;
+        // - Slave Select (optional) - output with initial value 1 (inactive).
+        if (p_config->ss_pin != NRFX_SPI_PIN_NOT_USED)
+        {
+             nrf_gpio_pin_set(p_config->ss_pin);
+             nrf_gpio_cfg_output(p_config->ss_pin);
+        }
+        m_cb[p_instance->drv_inst_idx].ss_pin = p_config->ss_pin;
     }
-    else
-    {
-        nrf_gpio_pin_set(p_config->sck_pin);
-    }
-    nrf_gpio_cfg(p_config->sck_pin,
-                 NRF_GPIO_PIN_DIR_OUTPUT,
-                 NRF_GPIO_PIN_INPUT_CONNECT,
-                 NRF_GPIO_PIN_NOPULL,
-                 NRF_GPIO_PIN_S0S1,
-                 NRF_GPIO_PIN_NOSENSE);
-    // - MOSI (optional) - output with initial value 0,
-    if (p_config->mosi_pin != NRFX_SPI_PIN_NOT_USED)
-    {
-        mosi_pin = p_config->mosi_pin;
-        nrf_gpio_pin_clear(mosi_pin);
-        nrf_gpio_cfg_output(mosi_pin);
-    }
-    else
-    {
-        mosi_pin = NRF_SPI_PIN_NOT_CONNECTED;
-    }
-    // - MISO (optional) - input,
-    if (p_config->miso_pin != NRFX_SPI_PIN_NOT_USED)
-    {
-        miso_pin = p_config->miso_pin;
-        nrf_gpio_cfg_input(miso_pin, p_config->miso_pull);
-    }
-    else
-    {
-        miso_pin = NRF_SPI_PIN_NOT_CONNECTED;
-    }
-    m_cb[p_instance->drv_inst_idx].miso_pin = p_config->miso_pin;
-    // - Slave Select (optional) - output with initial value 1 (inactive).
-    if (p_config->ss_pin != NRFX_SPI_PIN_NOT_USED)
-    {
-        nrf_gpio_pin_set(p_config->ss_pin);
-        nrf_gpio_cfg_output(p_config->ss_pin);
-    }
-    m_cb[p_instance->drv_inst_idx].ss_pin = p_config->ss_pin;
 
     NRF_SPI_Type * p_spi = p_instance->p_reg;
     nrf_spi_pins_set(p_spi, p_config->sck_pin, mosi_pin, miso_pin);
