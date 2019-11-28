@@ -131,7 +131,7 @@ typedef struct
     .def          = 0xFF,                                                   \
     .orc          = 0xFE,                                                   \
     .irq_priority = NRFX_SPIS_DEFAULT_CONFIG_IRQ_PRIORITY,                  \
-    .skip_gpio_cfg = false                                                \
+    .skip_gpio_cfg = false                                                  \
 }
 
 /** @brief SPI peripheral device configuration data. */
@@ -152,7 +152,10 @@ typedef struct
     uint8_t              def;           //!< Character clocked out in case of an ignored transaction.
     uint8_t              orc;           //!< Character clocked out after an over-read of the transmit buffer.
     uint8_t              irq_priority;  //!< Interrupt priority.
-    bool                 skip_gpio_cfg; /**< Do not change GPIO configuration */
+    bool                 skip_gpio_cfg; ///< Skip the GPIO configuration
+                                        /**< When this flag is set, the user is responsible for
+                                        *   providing the proper configuration of the output pins,
+                                        *   as the driver does not touch it at all. */
 } nrfx_spis_config_t;
 
 
