@@ -107,6 +107,7 @@ typedef struct
     nrf_spi_mode_t      mode;       ///< SPI mode.
     nrf_spi_bit_order_t bit_order;  ///< SPI bit order.
     nrf_gpio_pin_pull_t miso_pull;  ///< MISO pull up configuration.
+    bool                skip_gpio_cfg; /**< Do not change GPIO configuration */
 } nrfx_spi_config_t;
 
 /**
@@ -133,6 +134,7 @@ typedef struct
     .frequency    = NRF_SPI_FREQ_4M,                                        \
     .mode         = NRF_SPI_MODE_0,                                         \
     .bit_order    = NRF_SPI_BIT_ORDER_MSB_FIRST,                            \
+    .skip_gpio_cfg = false                                                \
 }
 
 /** @brief Single transfer descriptor structure. */
